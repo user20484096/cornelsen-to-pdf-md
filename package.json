@@ -1,0 +1,13 @@
+{
+  "name": "cornelsen-to-pdf-md",
+  "version": "1.0.0",
+  "description": "Extrahiert Schulbücher aus der Cornelsen Offline Lernen App als PDF und Markdown",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "pdfjs-dist": "^5.6.205"
+  },
+  "scripts": {
+    "start": "node cornelsen.js"
+  }
+}
