@@ -1,4 +1,4 @@
-# Cornelsen Offline-Decryptor
+# Cornelsen — Bücher als PDF und Markdown exportieren
 
 Entschlüsselt offline heruntergeladene Schulbücher aus der Cornelsen Offline Lernen Desktop-App und erzeugt PDFs, Klartext-/Markdown-Dateien und Zusatzmaterialien.
 Kein OCR — die Buchtexte werden direkt aus dem entschlüsselten PDF extrahiert. Keine Zugangsdaten nötig, es werden nur die lokal heruntergeladenen Dateien gelesen.
@@ -6,7 +6,9 @@ Die Markdown-Ausgabe eignet sich besonders gut zur Weiterverarbeitung durch KI-M
 
 ## Voraussetzungen
 
-- Cornelsen Offline Lernen Desktop-App (`https://www.cornelsen.de/empfehlungen/offline-lernen`) mit mindestens einem offline heruntergeladenen Buch
+- Cornelsen Offline Lernen Desktop-App mit mindestens einem offline heruntergeladenen Buch
+  - macOS: `https://ebook.cornelsen.de/uma20/public/v2/uma/offline/mac`
+  - Windows: `https://ebook.cornelsen.de/uma20/public/v2/uma/offline/win`
 
 ## Download (empfohlen)
 
