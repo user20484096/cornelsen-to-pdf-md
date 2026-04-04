@@ -1,0 +1,72 @@
+name: Build Executables
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version (z.B. v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            artifact: cornelsen-macos
+          - os: windows-latest
+            artifact: cornelsen-windows
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - name: Build executable
+        run: uv run --with pyinstaller --with cryptography --with pymupdf pyinstaller --onefile --name cornelsen --collect-all cryptography --collect-all fitz --collect-all pymupdf --hidden-import fitz cornelsen.py
+      - name: Package artifact
+        run: |
+          cd dist
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            chmod +x cornelsen
+            zip cornelsen-macos.zip cornelsen
+          fi
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            dist/*.zip
+            dist/*.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create tag (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git tag "${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            artifacts/cornelsen-macos/*.zip
+            artifacts/cornelsen-windows/*.exe
