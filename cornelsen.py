@@ -236,7 +236,8 @@ def main():
     markdown = "--markdown" in args
     no_materials = "--no-materials" in args
     book_filter = args[args.index("--book") + 1] if "--book" in args else None
-    output_dir = Path(args[args.index("--output") + 1]).resolve() if "--output" in args else Path.cwd() / "books"
+    default_books = Path(__file__).resolve().parent / "books"
+    output_dir = Path(args[args.index("--output") + 1]).resolve() if "--output" in args else default_books
 
     base = find_cornelsen_base()
 
